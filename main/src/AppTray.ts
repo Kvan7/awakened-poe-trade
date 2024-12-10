@@ -22,9 +22,9 @@ export class AppTray {
       trayImage = trayImage.resize({ width: 22, height: 22 })
     }
 
-    this.tray = new Tray(trayImage)
-    this.tray.setToolTip(`Awakened PoE Trade v${app.getVersion()}`)
-    this.rebuildMenu()
+    this.tray = new Tray(trayImage);
+    this.tray.setToolTip(`Exalted PoE2 Trade v${app.getVersion()}`);
+    this.rebuildMenu();
 
     server.onEventAnyClient('CLIENT->MAIN::user-action', ({ action }) => {
       if (action === 'quit') {

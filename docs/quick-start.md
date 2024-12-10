@@ -4,8 +4,8 @@ title: Quick Start
 
 #### First of all, how does it work? {:style="margin-top: 0;"}
 
-When you press `Ctrl + C` Path of Exile copies the item's text (under cursor, if any) to the clipboard.
-All that remains is to parse text in Awakened PoE Trade and show to you in a fancy way.
+When you press `Ctrl + C` Path of Exile 2 copies the item's text (under cursor, if any) to the clipboard.
+All that remains is to parse text in Exalted PoE2 Trade and show to you in a fancy way.
 
 ### Usage
 

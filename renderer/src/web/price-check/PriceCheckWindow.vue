@@ -87,7 +87,11 @@ import AppTitleBar from '@/web/ui/AppTitlebar.vue'
 import ItemQuickPrice from '@/web/ui/ItemQuickPrice.vue'
 import { PriceCheckWidget, WidgetManager } from '../overlay/interfaces'
 
-type ParseError = { name: string; message: string; rawText: ParsedItem['rawText'] }
+type ParseError = {
+	name: string;
+	message: string;
+	rawText: ParsedItem['rawText'];
+};
 
 export default defineComponent({
   components: {
@@ -112,75 +116,87 @@ export default defineComponent({
     const wm = inject<WidgetManager>('wm')!
     const { xchgRate, initialLoading: xchgRateLoading, queuePricesFetch } = usePoeninja()
 
-    nextTick(() => {
-      props.config.wmWants = 'hide'
-      props.config.wmFlags = ['hide-on-blur', 'skip-menu']
-    })
+		nextTick(() => {
+			props.config.wmWants = 'hide';
+			props.config.wmFlags = ['hide-on-blur', 'skip-menu'];
+		});
 
-    const item = shallowRef<null | Result<ParsedItem, ParseError>>(null)
-    const advancedCheck = shallowRef(false)
-    const checkPosition = shallowRef({ x: 1, y: 1 })
+		const item = shallowRef<null | Result<ParsedItem, ParseError>>(null);
+		const advancedCheck = shallowRef(false);
+		const checkPosition = shallowRef({ x: 1, y: 1 });
 
-    MainProcess.onEvent('MAIN->CLIENT::item-text', (e) => {
-      if (e.target !== 'price-check') return
+		MainProcess.onEvent('MAIN->CLIENT::item-text', (e) => {
+			if (e.target !== 'price-check') return;
 
-      if (Host.isElectron && !e.focusOverlay) {
-        // everything in CSS pixels
-        const width = 28.75 * AppConfig().fontSize
-        const screenX = ((e.position.x - window.screenX) > window.innerWidth / 2)
-          ? (window.screenX + window.innerWidth) - wm.poePanelWidth.value - width
-          : window.screenX + wm.poePanelWidth.value
-        MainProcess.sendEvent({
-          name: 'OVERLAY->MAIN::track-area',
-          payload: {
-            holdKey: props.config.hotkeyHold,
-            closeThreshold: 2.5 * AppConfig().fontSize,
-            from: e.position,
-            area: {
-              x: screenX,
-              y: window.screenY,
-              width,
-              height: window.innerHeight
-            },
-            dpr: window.devicePixelRatio
-          }
-        })
-      }
-      closeBrowser()
-      wm.show(props.config.wmId)
-      checkPosition.value = e.position
-      advancedCheck.value = e.focusOverlay
+			if (Host.isElectron && !e.focusOverlay) {
+				// everything in CSS pixels
+				const width = 28.75 * AppConfig().fontSize;
+				const screenX =
+					e.position.x - window.screenX > window.innerWidth / 2
+						? window.screenX +
+							window.innerWidth -
+							wm.poePanelWidth.value -
+							width
+						: window.screenX + wm.poePanelWidth.value;
+				MainProcess.sendEvent({
+					name: 'OVERLAY->MAIN::track-area',
+					payload: {
+						holdKey: props.config.hotkeyHold,
+						closeThreshold: 2.5 * AppConfig().fontSize,
+						from: e.position,
+						area: {
+							x: screenX,
+							y: window.screenY,
+							width,
+							height: window.innerHeight,
+						},
+						dpr: window.devicePixelRatio,
+					},
+				});
+			}
+			closeBrowser();
+			wm.show(props.config.wmId);
+			checkPosition.value = e.position;
+			advancedCheck.value = e.focusOverlay;
 
-      item.value = (e.item ? ok(e.item as ParsedItem) : parseClipboard(e.clipboard))
-        .andThen(item => (
-          (item.category === ItemCategory.HeistContract && item.rarity !== ItemRarity.Unique) ||
-          (item.category === ItemCategory.Sentinel && item.rarity !== ItemRarity.Unique))
-          ? err('item.unknown')
-          : ok(item))
-        .mapErr(err => ({
-          name: `${err}`,
-          message: `${err}_help`,
-          rawText: e.clipboard
-        }))
+			item.value = (
+				e.item ? ok(e.item as ParsedItem) : parseClipboard(e.clipboard)
+			)
+				.andThen((item) =>
+					(item.category === ItemCategory.HeistContract &&
+						item.rarity !== ItemRarity.Unique) ||
+					(item.category === ItemCategory.Sentinel &&
+						item.rarity !== ItemRarity.Unique)
+						? err('item.unknown')
+						: ok(item)
+				)
+				.mapErr((err) => ({
+					name: `${err}`,
+					message: `${err}_help`,
+					rawText: e.clipboard,
+				}));
 
-      if (item.value.isOk()) {
-        queuePricesFetch()
-      }
-    })
+			if (item.value.isOk()) {
+				queuePricesFetch();
+			}
+		});
 
     function handleIdentification (identified: ParsedItem) {
       item.value = ok(identified)
     }
 
-    MainProcess.onEvent('MAIN->OVERLAY::hide-exclusive-widget', () => {
-      wm.hide(props.config.wmId)
-    })
+		MainProcess.onEvent('MAIN->OVERLAY::hide-exclusive-widget', () => {
+			wm.hide(props.config.wmId);
+		});
 
-    watch(() => props.config.wmWants, (state) => {
-      if (state === 'hide') {
-        closeBrowser()
-      }
-    })
+		watch(
+			() => props.config.wmWants,
+			(state) => {
+				if (state === 'hide') {
+					closeBrowser();
+				}
+			}
+		);
 
     const leagues = useLeagues()
     const title = computed(() => leagues.selectedId.value || 'Awakened PoE Trade')
@@ -200,15 +216,15 @@ export default defineComponent({
       }
     })
 
-    watch(isBrowserShown, (isShown) => {
-      if (isShown) {
-        wm.setFlag(props.config.wmId, 'hide-on-blur', false)
-        wm.setFlag(props.config.wmId, 'invisible-on-blur', true)
-      } else {
-        wm.setFlag(props.config.wmId, 'invisible-on-blur', false)
-        wm.setFlag(props.config.wmId, 'hide-on-blur', true)
-      }
-    })
+		watch(isBrowserShown, (isShown) => {
+			if (isShown) {
+				wm.setFlag(props.config.wmId, 'hide-on-blur', false);
+				wm.setFlag(props.config.wmId, 'invisible-on-blur', true);
+			} else {
+				wm.setFlag(props.config.wmId, 'invisible-on-blur', false);
+				wm.setFlag(props.config.wmId, 'hide-on-blur', true);
+			}
+		});
 
     function closePriceCheck () {
       if (isBrowserShown.value || !Host.isElectron) {
@@ -224,7 +240,7 @@ export default defineComponent({
       wm.show(settings.wmId)
     }
 
-    const iframeEl = shallowRef<HTMLIFrameElement | null>(null)
+		const iframeEl = shallowRef<HTMLIFrameElement | null>(null);
 
     function showBrowser (url: string) {
       wm.setFlag(props.config.wmId, 'has-browser', true)
@@ -237,28 +253,28 @@ export default defineComponent({
       wm.setFlag(props.config.wmId, 'has-browser', false)
     }
 
-    provide<(url: string) => void>('builtin-browser', showBrowser)
+		provide<(url: string) => void>('builtin-browser', showBrowser);
 
-    const { t } = useI18n()
+		const { t } = useI18n();
 
-    return {
-      t,
-      clickPosition,
-      isBrowserShown,
-      iframeEl,
-      closePriceCheck,
-      title,
-      stableOrbCost,
-      xchgRateLoading,
-      showCheckPos,
-      checkPosition,
-      item,
-      advancedCheck,
-      handleIdentification,
-      overlayKey,
-      isLeagueSelected,
-      openLeagueSelection
-    }
-  }
-})
+		return {
+			t,
+			clickPosition,
+			isBrowserShown,
+			iframeEl,
+			closePriceCheck,
+			title,
+			stableOrbCost,
+			xchgRateLoading,
+			showCheckPos,
+			checkPosition,
+			item,
+			advancedCheck,
+			handleIdentification,
+			overlayKey,
+			isLeagueSelected,
+			openLeagueSelection,
+		};
+	},
+});
 </script>

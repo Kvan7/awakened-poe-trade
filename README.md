@@ -1,16 +1,21 @@
-# ![Awakener's Orb](https://web.poecdn.com/image/Art/2DItems/Currency/TransferOrb.png) Awakened PoE Trade
+# ![Awakener's Orb](https://web.poecdn.com/image/Art/2DItems/Currency/TransferOrb.png) Awakened PoE2 Trade2
 
-[![](https://user-images.githubusercontent.com/4292308/153364874-dde23599-278c-4350-8d86-dadbc4b978b3.svg)](https://somsubhra.github.io/github-release-stats/?username=SnosMe&repository=awakened-poe-trade)
-[![](https://user-images.githubusercontent.com/4292308/153364769-e4fe1e82-1bbc-46ac-8a3c-f5a98a5667cc.svg)](https://patreon.com/awakened_poe_trade)
-[![](https://user-images.githubusercontent.com/4292308/153364565-7a545d26-e617-4a33-a919-ff90d8feda3d.svg)](https://github.com/SnosMe/awakened-poe-trade/issues/22)
+## Moving from POE1
 
-
-➡ [Download for Windows & Linux](https://snosme.github.io/awakened-poe-trade/download) ⬅
+1. Download latest release from [releases](https://github.com/Kvan7/awakened-poe2-trade2/releases)
+  - Currently only Windows is supported
+  - Only available as pre-release right now
+2. Run installer
+3. Copy `apt-data` from `%APPDATA%\awakened-poe-trade` to `%APPDATA%\awakened-poe2-trade2` to copy your previous settings
+  - Resulting directory structure should look like this:
+  - `%APPDATA%\awakened-poe2-trade2\apt-data\`
+    - `config.json`
+4. Run Exalted PoE2 Trade
 
 ## Tool showcase
 
-| Gem | Rare | Unique | Currency |
-|-----|------|--------|----------|
+| Gem                                  | Rare                                 | Unique                               | Currency                             |
+| ------------------------------------ | ------------------------------------ | ------------------------------------ | ------------------------------------ |
 | ![](https://i.imgur.com/LTsH2DZ.png) | ![](https://i.imgur.com/2XL5Wl8.png) | ![](https://i.imgur.com/UTV6prE.png) | ![](https://i.imgur.com/dQ9Sns6.png) |
 
 ### Development
