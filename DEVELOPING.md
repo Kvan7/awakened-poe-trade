@@ -39,5 +39,5 @@ cd ../main
 npm run build
 # We want to sign with a distribution certificate to ensure other users can
 # install without errors
-CSC_NAME="Certificate name in Keychain" yarn package
+CSC_NAME="Certificate name in Keychain" npm run package
 ```

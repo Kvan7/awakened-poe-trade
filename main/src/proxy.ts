@@ -1,6 +1,6 @@
-import type { Server } from 'http'
-import { app, net } from 'electron'
-import type { Logger } from './RemoteLogger'
+import type { Server } from 'http';
+import { app, net } from 'electron';
+import type { Logger } from './RemoteLogger';
 
 const PROXY_HOSTS = [
   { host: 'www.pathofexile.com', official: true },
@@ -9,7 +9,7 @@ const PROXY_HOSTS = [
   { host: 'poe.game.daum.net', official: true },
   { host: 'poe.ninja', official: false },
   { host: 'www.poeprices.info', official: false },
-]
+];
 
 export class HttpProxy {
   constructor (
@@ -17,55 +17,83 @@ export class HttpProxy {
     logger: Logger
   ) {
     server.addListener('request', (req, res) => {
-      if (!req.url?.startsWith('/proxy/')) return
-      
-      const host = req.url.split('/', 3)[2]
-      logger.write(`Incoming request to proxy: ${req.url}`); // Log incoming request
+      if (!req.url?.startsWith('/proxy/')) return;
 
-      const official = PROXY_HOSTS.find(entry => entry.host === host)?.official
+      const host = req.url.split('/', 3)[2];
+      logger.write(`Incoming request to proxy: ${req.url}`);
+
+      const official = PROXY_HOSTS.find(entry => entry.host === host)?.official;
       if (official === undefined) {
         logger.write(`Host not officially supported: ${host}`);
-        return req.destroy() // Log rejection on unsupported host
+        return req.destroy(); // Log rejection on unsupported host
       }
 
       // Log headers before modifying them
-      logger.write(`Incoming request headers: ${JSON.stringify(req.headers)}`);
-      
       for (const key in req.headers) {
         if (key.startsWith('sec-') || key === 'host' || key === 'origin' || key === 'content-length') {
-          delete req.headers[key]
+          delete req.headers[key];
         }
       }
 
       const url = req.url.slice('/proxy/'.length);
-      const proxyReq = net.request({
-        url: 'https://' + url,
-        method: req.method,
-        headers: {
-          ...req.headers,
-          'user-agent': app.userAgentFallback
-        },
-        useSessionCookies: true
-      })
+      logger.write(`Incoming request headers: ${JSON.stringify(req.headers)}`);
+      logger.write(`Proxying ${req.method} request to https://${url}`);
+      logger.write(`Fallback user-agent: ${app.userAgentFallback}`);
 
-      proxyReq.addListener('response', (proxyRes) => {
-        const resHeaders = { ...proxyRes.headers }
-        // Log response status and headers
-        logger.write(`Proxy response status: ${proxyRes.statusCode}, status message: ${proxyRes.statusMessage}`);
-        logger.write(`Proxy response headers: ${JSON.stringify(resHeaders)}`);
+      // Collect POST body data if applicable
+      let bodyData = '';
+      req.on('data', (chunk) => {
+        bodyData += chunk.toString(); // Accumulate incoming data
+      });
 
-        delete resHeaders['content-encoding']
-        res.writeHead(proxyRes.statusCode, proxyRes.statusMessage, resHeaders)
-        ;(proxyRes as unknown as NodeJS.ReadableStream).pipe(res)
-      })
+      req.on('end', () => {
+        if (req.method === 'POST') {
+          logger.write(`Incoming POST body: ${bodyData}`); // Log the complete POST body
+        }
+        
+        // Now pipe the request to the proxy
+        const proxyReq = net.request({
+          url: 'https://' + url,
+          method: req.method,
+          headers: {
+            ...req.headers,
+            'user-agent': app.userAgentFallback
+          },
+          useSessionCookies: true
+        });
 
-      proxyReq.addListener('error', (err) => {
-        logger.write(`Error during proxy request: ${err.message} (${host}); is this a network error?`);
-        res.writeHead(502, 'Bad Gateway');
-        res.end(`Proxy error: ${err.message}`);
-      })
+        proxyReq.addListener('response', (proxyRes) => {
+          const resHeaders = { ...proxyRes.headers };
+          logger.write(`Proxy response status: ${proxyRes.statusCode}, status message: ${proxyRes.statusMessage}`);
+          logger.write(`Proxy response headers: ${JSON.stringify(resHeaders)}`);
 
-      req.pipe(proxyReq as unknown as NodeJS.WritableStream);
-    })
+          let responseBody = '';
+          proxyRes.on('data', (chunk) => {
+            responseBody += chunk.toString(); // Accumulate response body
+          });
+
+          proxyRes.on('end', () => {
+            logger.write(`Proxy response body: ${responseBody}`); // Log the complete response body
+            delete resHeaders['content-encoding'];
+            res.writeHead(proxyRes.statusCode, proxyRes.statusMessage, resHeaders);
+            res.end(responseBody); // Send the body back to the original request
+          });
+          
+        });
+
+        proxyReq.addListener('error', (err) => {
+          logger.write(`Error during proxy request: ${err.message} (${host}); is this a network error?`);
+          res.writeHead(502, 'Bad Gateway');
+          res.end(`Proxy error: ${err.message}`);
+        });
+
+        // Write the request body to the proxy request if it exists
+        if (bodyData) {
+          proxyReq.write(bodyData);
+        }
+        
+        req.pipe(proxyReq as unknown as NodeJS.WritableStream);
+      });
+    });
   }
 }
