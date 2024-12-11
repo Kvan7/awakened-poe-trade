@@ -70,14 +70,14 @@ export async function initConfig () {
     saveConfig({ isTemporary: true })
     return
 
-		// TODO
-		// dialog.showErrorBox(
-		//   'Exalted PoE2 Trade - Incompatible configuration',
-		//   // ----------------------
-		//   'You are trying to use an older version of Exalted PoE2 Trade with a newer incompatible configuration file.\n' +
-		//   'You need to install the latest version to continue using it.'
-		// )
-	}
+    // TODO
+    // dialog.showErrorBox(
+    //   'Exalted PoE2 Trade - Incompatible configuration',
+    //   // ----------------------
+    //   'You are trying to use an older version of Exalted PoE2 Trade with a newer incompatible configuration file.\n' +
+    //   'You need to install the latest version to continue using it.'
+    // )
+  }
 
   updateConfig(upgradeConfig(config))
 }

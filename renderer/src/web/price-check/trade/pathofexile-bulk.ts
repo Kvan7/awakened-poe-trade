@@ -120,7 +120,7 @@ export function createTradeRequest (filters: ItemFilters, item: ParsedItem, have
   return {
     engine: 'new',
     query: {
-      have: have,
+      have,
       want: [tradeTag(item)!],
       status: {
         option: filters.trade.offline
@@ -182,7 +182,7 @@ export async function execBulkSearch (
       total: (chaosIsLoaded)
         ? resultsTag.length
         : (query.total - (results.length - resultsTag.length)),
-      listed: listed
+      listed
     }
   })
 

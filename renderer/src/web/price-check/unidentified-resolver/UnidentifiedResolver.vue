@@ -58,7 +58,7 @@ export default defineComponent({
     function select (info: BaseType) {
       const newItem: ParsedItem = {
         ...props.item!,
-        info: info
+        info
       }
       ctx.emit('identify', newItem)
     }
