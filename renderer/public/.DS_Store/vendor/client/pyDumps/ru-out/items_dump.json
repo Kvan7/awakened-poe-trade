@@ -573,7 +573,9 @@
         "craftable": {
             "category": "Currency"
         },
-        "category": null
+        "category": null,
+        "tradeTag": "chance-shard",
+        "icon": "https://web.poecdn.com/gen/image/WzI1LDE0LHsiZiI6IjJESXRlbXMvQ3VycmVuY3kvQ3VycmVuY3lVcGdyYWRlVG9VbmlxdWVTaGFyZCIsInNjYWxlIjoxLCJyZWFsbSI6InBvZTIifV0/9828a70270/CurrencyUpgradeToUniqueShard.png"
     },
     "35": {
         "name": "Перо белого роа",

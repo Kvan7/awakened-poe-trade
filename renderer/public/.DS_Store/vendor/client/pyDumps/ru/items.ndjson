@@ -1882,7 +1882,7 @@
 {"name": "Осколок превращения", "refName": "Осколок превращения", "namespace": "ITEM", "icon": "https://web.poecdn.com/gen/image/WzI1LDE0LHsiZiI6IjJESXRlbXMvQ3VycmVuY3kvQ3VycmVuY3lVcGdyYWRlVG9NYWdpY1NoYXJkIiwic2NhbGUiOjEsInJlYWxtIjoicG9lMiJ9XQ/e67bca229b/CurrencyUpgradeToMagicShard.png", "tradeTag": "transmutation-shard", "craftable": {"category": "Currency"}, "w": 1, "h": 1}
 {"name": "Осколок сплетения", "refName": "Осколок сплетения", "namespace": "ITEM", "icon": "%NOT_FOUND%", "craftable": {"category": "Currency"}, "w": 1, "h": 1}
 {"name": "Осколок стекла", "refName": "Осколок стекла", "namespace": "ITEM", "icon": "%NOT_FOUND%", "craftable": {"category": "Dagger"}, "w": 1, "h": 3}
-{"name": "Осколок удачи", "refName": "Осколок удачи", "namespace": "ITEM", "icon": "%NOT_FOUND%", "craftable": {"category": "Currency"}, "w": 1, "h": 1}
+{"name": "Осколок удачи", "refName": "Осколок удачи", "namespace": "ITEM", "icon": "https://web.poecdn.com/gen/image/WzI1LDE0LHsiZiI6IjJESXRlbXMvQ3VycmVuY3kvQ3VycmVuY3lVcGdyYWRlVG9VbmlxdWVTaGFyZCIsInNjYWxlIjoxLCJyZWFsbSI6InBvZTIifV0/9828a70270/CurrencyUpgradeToUniqueShard.png", "tradeTag": "chance-shard", "craftable": {"category": "Currency"}, "w": 1, "h": 1}
 {"name": "Осколок хаоса", "refName": "Осколок хаоса", "namespace": "ITEM", "icon": "%NOT_FOUND%", "craftable": {"category": "Currency"}, "w": 1, "h": 1}
 {"name": "Осколок царей", "refName": "Осколок царей", "namespace": "ITEM", "icon": "https://web.poecdn.com/gen/image/WzI1LDE0LHsiZiI6IjJESXRlbXMvQ3VycmVuY3kvQ3VycmVuY3lVcGdyYWRlTWFnaWNUb1JhcmVTaGFyZCIsInNjYWxlIjoxLCJyZWFsbSI6InBvZTIifV0/e4128abe92/CurrencyUpgradeMagicToRareShard.png", "tradeTag": "regal-shard", "craftable": {"category": "Currency"}, "w": 1, "h": 1}
 {"name": "Ослепление", "refName": "Ослепление", "namespace": "GEM", "icon": "%NOT_FOUND%", "craftable": {"category": "Support Skill Gem"}, "w": 1, "h": 1, "gem": {"awakened": false, "transfigured": false}}
@@ -2829,6 +2829,7 @@
 {"name": "Shavronne's Satchel", "refName": "Shavronne's Satchel", "namespace": "UNIQUE", "unique": {"base": "Тонкий ремень"}}
 {"name": "Серпентарий", "refName": "Серпентарий", "namespace": "UNIQUE", "unique": {"base": "Жемчужное кольцо"}}
 {"name": "Оковы души", "refName": "Оковы души", "namespace": "UNIQUE", "unique": {"base": "Длинный ремень"}}
+{"name": "Strugglescream", "refName": "Strugglescream", "namespace": "UNIQUE", "unique": {"base": "Звёздный амулет"}}
 {"name": "Surefooted Sigil", "refName": "Surefooted Sigil", "namespace": "UNIQUE", "unique": {"base": "Амулет с нефритом"}}
 {"name": "Наковальня", "refName": "Наковальня", "namespace": "UNIQUE", "unique": {"base": "Амулет с кровавым камнем"}}
 {"name": "The Burrower", "refName": "The Burrower", "namespace": "UNIQUE", "unique": {"base": "Кольцо с топазом"}}
@@ -3004,15 +3005,17 @@
 {"name": "Противление тьме", "refName": "Противление тьме", "namespace": "UNIQUE", "unique": {"base": "Утерянный алмаз"}}
 {"name": "Controlled Metamorphosis", "refName": "Controlled Metamorphosis", "namespace": "UNIQUE", "unique": {"base": "Алмаз"}}
 {"name": "Из ничего", "refName": "Из ничего", "namespace": "UNIQUE", "unique": {"base": "Алмаз"}}
-{"name": "Великий образ", "refName": "Великий образ", "namespace": "UNIQUE", "unique": {"base": "Бирюзовый самоцвет"}}
 {"name": "Великий образ", "refName": "Великий образ", "namespace": "UNIQUE", "unique": {"base": "Багровый самоцвет"}}
 {"name": "Великий образ", "refName": "Великий образ", "namespace": "UNIQUE", "unique": {"base": "Кобальтовый самоцвет"}}
+{"name": "Великий образ", "refName": "Великий образ", "namespace": "UNIQUE", "unique": {"base": "Бирюзовый самоцвет"}}
 {"name": "Heroic Tragedy", "refName": "Heroic Tragedy", "namespace": "UNIQUE", "unique": {"base": "Вневременной самоцвет"}}
+{"name": "Мания величия", "refName": "Мания величия", "namespace": "UNIQUE", "unique": {"base": "Алмаз"}}
 {"name": "Prism of Belief", "refName": "Prism of Belief", "namespace": "UNIQUE", "unique": {"base": "Алмаз"}}
 {"name": "Былой блеск", "refName": "Былой блеск", "namespace": "UNIQUE", "unique": {"base": "Алмаз"}}
 {"name": "Мозготряс", "refName": "Мозготряс", "namespace": "UNIQUE", "unique": {"base": "Шипастая палица"}}
 {"name": "Знак Бринханда", "refName": "Знак Бринханда", "namespace": "UNIQUE", "unique": {"base": "Деревянная дубинка"}}
 {"name": "Стук-Постук", "refName": "Стук-Постук", "namespace": "UNIQUE", "unique": {"base": "Освинцованный молот"}}
+{"name": "Collapsing Horizon", "refName": "Collapsing Horizon", "namespace": "UNIQUE", "unique": {"base": "Боевой посох змия"}}
 {"name": "Арфа смерти", "refName": "Арфа смерти", "namespace": "UNIQUE", "unique": {"base": "Спаренный лук"}}
 {"name": "Сумеречный дозор", "refName": "Сумеречный дозор", "namespace": "UNIQUE", "unique": {"base": "Пепельный посох"}}
 {"name": "Earthbound", "refName": "Earthbound", "namespace": "UNIQUE", "unique": {"base": "Гальванический посох"}}
@@ -3022,10 +3025,20 @@
 {"name": "Направляющая длань", "refName": "Направляющая длань", "namespace": "UNIQUE", "unique": {"base": "Храмовый скипетр"}}
 {"name": "Кабаний промысел", "refName": "Кабаний промысел", "namespace": "UNIQUE", "unique": {"base": "Дубина из пня"}}
 {"name": "Гимн Гримнора", "refName": "Гимн Гримнора", "namespace": "UNIQUE", "unique": {"base": "Дубовая кувалда"}}
-{"name": "INCOMPLETE", "refName": "INCOMPLETE", "namespace": "UNIQUE", "unique": {"base": "Воинское копьё"}}
 {"name": "INCOMPLETE", "refName": "INCOMPLETE", "namespace": "UNIQUE", "unique": {"base": "Клинок-кровопийца"}}
+{"name": "INCOMPLETE", "refName": "INCOMPLETE", "namespace": "UNIQUE", "unique": {"base": "Старый нож"}}
+{"name": "INCOMPLETE", "refName": "INCOMPLETE", "namespace": "UNIQUE", "unique": {"base": "Простой кинжал"}}
+{"name": "INCOMPLETE", "refName": "INCOMPLETE", "namespace": "UNIQUE", "unique": {"base": "Цепное гасило"}}
+{"name": "INCOMPLETE", "refName": "INCOMPLETE", "namespace": "UNIQUE", "unique": {"base": "Двойной кистень"}}
+{"name": "INCOMPLETE", "refName": "INCOMPLETE", "namespace": "UNIQUE", "unique": {"base": "Тупой топорик"}}
+{"name": "INCOMPLETE", "refName": "INCOMPLETE", "namespace": "UNIQUE", "unique": {"base": "Секач"}}
+{"name": "INCOMPLETE", "refName": "INCOMPLETE", "namespace": "UNIQUE", "unique": {"base": "Удлинённый тесак"}}
+{"name": "INCOMPLETE", "refName": "INCOMPLETE", "namespace": "UNIQUE", "unique": {"base": "Бандитский чекан"}}
+{"name": "INCOMPLETE", "refName": "INCOMPLETE", "namespace": "UNIQUE", "unique": {"base": "Охотничье копьё"}}
+{"name": "INCOMPLETE", "refName": "INCOMPLETE", "namespace": "UNIQUE", "unique": {"base": "Воинское копьё"}}
 {"name": "INCOMPLETE", "refName": "INCOMPLETE", "namespace": "UNIQUE", "unique": {"base": "Обугленный короткий меч"}}
 {"name": "INCOMPLETE", "refName": "INCOMPLETE", "namespace": "UNIQUE", "unique": {"base": "Ржавый длинный меч"}}
+{"name": "INCOMPLETE", "refName": "INCOMPLETE", "namespace": "UNIQUE", "unique": {"base": "Железный большой меч"}}
 {"name": "INCOMPLETE", "refName": "INCOMPLETE", "namespace": "UNIQUE", "unique": {"base": "Фламберг"}}
 {"name": "Живой побег", "refName": "Живой побег", "namespace": "UNIQUE", "unique": {"base": "Вытягивающий жезл"}}
 {"name": "Matsya", "refName": "Matsya", "namespace": "UNIQUE", "unique": {"base": "Боевой посох с полумесяцем"}}
@@ -3036,10 +3049,13 @@
 {"name": "Кечолли", "refName": "Кечолли", "namespace": "UNIQUE", "unique": {"base": "Крошащий молот"}}
 {"name": "Ливень перьев", "refName": "Ливень перьев", "namespace": "UNIQUE", "unique": {"base": "Короткий лук"}}
 {"name": "Rampart Raptor", "refName": "Rampart Raptor", "namespace": "UNIQUE", "unique": {"base": "Тугой самострел"}}
+{"name": "Красный клюв", "refName": "Красный клюв", "namespace": "UNIQUE", "unique": {"base": "Короткий меч"}}
 {"name": "Священное пламя", "refName": "Священное пламя", "namespace": "UNIQUE", "unique": {"base": "Храмовый скипетр"}}
 {"name": "Sanguine Diviner", "refName": "Sanguine Diviner", "namespace": "UNIQUE", "unique": {"base": "Костяной жезл"}}
 {"name": "Seeing Stars", "refName": "Seeing Stars", "namespace": "UNIQUE", "unique": {"base": "Кованая булава"}}
+{"name": "Небесный осколок", "refName": "Небесный осколок", "namespace": "UNIQUE", "unique": {"base": "Крылатое копьё"}}
 {"name": "Splinterheart", "refName": "Splinterheart", "namespace": "UNIQUE", "unique": {"base": "Загнутый лук"}}
+{"name": "Осколок Лоратты", "refName": "Осколок Лоратты", "namespace": "UNIQUE", "unique": {"base": "Копьё из твёрдой древесины"}}
 {"name": "Дрожь Тарина", "refName": "Дрожь Тарина", "namespace": "UNIQUE", "unique": {"base": "Студёный посох"}}
 {"name": "Кровавый шип", "refName": "Кровавый шип", "namespace": "UNIQUE", "unique": {"base": "Обмотанный боевой посох"}}
 {"name": "The Burden of Shadows", "refName": "The Burden of Shadows", "namespace": "UNIQUE", "unique": {"base": "Звенящий посох"}}
