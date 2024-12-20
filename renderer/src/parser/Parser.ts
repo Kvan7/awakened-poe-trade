@@ -1,7 +1,7 @@
 import { Result, ok, err } from "neverthrow";
 import {
-  CLIENT_STRINGS as _$,
-  CLIENT_STRINGS_REF as _$REF,
+  CLIENT_STRINGS,
+  CLIENT_STRINGS_REF,
   ITEM_BY_TRANSLATED,
   ITEM_BY_REF,
   STAT_BY_MATCH_STR,
@@ -12,6 +12,7 @@ import {
   linesToStatStrings,
   tryParseTranslation,
   getRollOrMinmaxAvg,
+  testOverrideClientStrings as testOverrideClientStringsStat,
 } from "./stat-translations";
 import { ItemCategory } from "./meta";
 import {
@@ -32,8 +33,17 @@ import {
   SCOURGE_LINE,
   IMPLICIT_LINE,
   RUNE_LINE,
+  testOverrideClientStrings,
 } from "./advanced-mod-desc";
 import { calcPropPercentile, QUALITY_STATS } from "./calc-q20";
+
+import * as TESTING from "./en/testLoader";
+
+let _$ = CLIENT_STRINGS;
+let _$REF = CLIENT_STRINGS_REF;
+let ITEM_BY_TRANSLATED_LOCAL = ITEM_BY_TRANSLATED;
+let ITEM_BY_REF_LOCAL = ITEM_BY_REF;
+let STAT_BY_MATCH_STR_LOCAL = STAT_BY_MATCH_STR;
 
 type SectionParseResult =
   | "SECTION_PARSED"
@@ -196,19 +206,19 @@ function normalizeName(item: ParserState) {
 function findInDatabase(item: ParserState) {
   let info: BaseType[] | undefined;
   if (item.category === ItemCategory.DivinationCard) {
-    info = ITEM_BY_REF("DIVINATION_CARD", item.name);
+    info = ITEM_BY_REF_LOCAL("DIVINATION_CARD", item.name);
   } else if (item.category === ItemCategory.CapturedBeast) {
-    info = ITEM_BY_REF("CAPTURED_BEAST", item.baseType ?? item.name);
+    info = ITEM_BY_REF_LOCAL("CAPTURED_BEAST", item.baseType ?? item.name);
   } else if (item.category === ItemCategory.Gem) {
-    info = ITEM_BY_REF("GEM", item.name);
+    info = ITEM_BY_REF_LOCAL("GEM", item.name);
   } else if (item.category === ItemCategory.MetamorphSample) {
-    info = ITEM_BY_REF("ITEM", item.name);
+    info = ITEM_BY_REF_LOCAL("ITEM", item.name);
   } else if (item.category === ItemCategory.Voidstone) {
-    info = ITEM_BY_REF("ITEM", "Charged Compass");
+    info = ITEM_BY_REF_LOCAL("ITEM", "Charged Compass");
   } else if (item.rarity === ItemRarity.Unique && !item.isUnidentified) {
-    info = ITEM_BY_REF("UNIQUE", item.name);
+    info = ITEM_BY_REF_LOCAL("UNIQUE", item.name);
   } else {
-    info = ITEM_BY_REF("ITEM", item.baseType ?? item.name);
+    info = ITEM_BY_REF_LOCAL("ITEM", item.baseType ?? item.name);
   }
   if (!info?.length) {
     return err("item.unknown");
@@ -224,7 +234,7 @@ function findInDatabase(item: ParserState) {
     if (item.info.craftable) {
       item.category = item.info.craftable.category;
     } else if (item.info.unique) {
-      item.category = ITEM_BY_REF(
+      item.category = ITEM_BY_REF_LOCAL(
         "ITEM",
         item.info.unique.base,
       )![0].craftable!.category;
@@ -256,10 +266,10 @@ function parseBlightedMap(item: ParsedItem) {
   if (calc !== undefined) {
     if (calc.sources[0].contributes!.value === 9) {
       item.mapBlighted = "Blight-ravaged";
-      item.info.icon = ITEM_BY_REF("ITEM", "Blight-ravaged Map")![0].icon;
+      item.info.icon = ITEM_BY_REF_LOCAL("ITEM", "Blight-ravaged Map")![0].icon;
     } else {
       item.mapBlighted = "Blighted";
-      item.info.icon = ITEM_BY_REF("ITEM", "Blighted Map")![0].icon;
+      item.info.icon = ITEM_BY_REF_LOCAL("ITEM", "Blighted Map")![0].icon;
     }
   }
 }
@@ -482,11 +492,11 @@ function parseVaalGemName(section: string[], item: ParserState) {
   // TODO blocked by https://www.pathofexile.com/forum/view-thread/3231236
   if (section.length === 1) {
     let gemName: string | undefined;
-    if (ITEM_BY_TRANSLATED("GEM", section[0])) {
+    if (ITEM_BY_TRANSLATED_LOCAL("GEM", section[0])) {
       gemName = section[0];
     }
     if (gemName) {
-      item.name = ITEM_BY_TRANSLATED("GEM", gemName)![0].refName;
+      item.name = ITEM_BY_TRANSLATED_LOCAL("GEM", gemName)![0].refName;
       return "SECTION_PARSED";
     }
   }
@@ -703,7 +713,7 @@ function parseLogbookArea(section: string[], item: ParsedItem) {
   if (section.length < 3) return "SECTION_SKIPPED";
 
   // skip Area, parse Faction
-  const faction = STAT_BY_MATCH_STR(section[1]);
+  const faction = STAT_BY_MATCH_STR_LOCAL(section[1]);
   if (!faction) return "SECTION_SKIPPED";
 
   const areaMods: ParsedModifier[] = [
@@ -720,7 +730,7 @@ function parseLogbookArea(section: string[], item: ParsedItem) {
 
   const { modType, lines } = parseModType(section.slice(2));
   for (const line of lines) {
-    const found = STAT_BY_MATCH_STR(line);
+    const found = STAT_BY_MATCH_STR_LOCAL(line);
     if (found && found.stat.ref === "Area contains an Expedition Boss (#)") {
       const roll = found.matcher.value!;
       areaMods.push({
@@ -1157,7 +1167,7 @@ function parseAtzoatlRooms(section: string[], item: ParsedItem) {
       continue;
     }
 
-    const found = STAT_BY_MATCH_STR(line);
+    const found = STAT_BY_MATCH_STR_LOCAL(line);
     if (found) {
       item.newMods.push({
         info: { tags: [], type: ModifierType.Pseudo },
@@ -1256,7 +1266,7 @@ function parseStatsFromMod(
 
   if (modifier.info.type === ModifierType.Veiled) {
     console.log("mod name:", modifier.info.name);
-    const found = STAT_BY_MATCH_STR(modifier.info.name!);
+    const found = STAT_BY_MATCH_STR_LOCAL(modifier.info.name!);
     if (found) {
       modifier.stats.push({
         stat: found.stat,
@@ -1301,7 +1311,7 @@ function transformToLegacyModifiers(item: ParsedItem) {
 
 function calcBasePercentile(item: ParsedItem) {
   const info = item.info.unique
-    ? ITEM_BY_REF("ITEM", item.info.unique.base)![0].armour
+    ? ITEM_BY_REF_LOCAL("ITEM", item.info.unique.base)![0].armour
     : item.info.armour;
   if (!info) return;
 
@@ -1339,4 +1349,111 @@ export function removeLinesEnding(
   return lines.map((line) =>
     line.endsWith(ending) ? line.slice(0, -ending.length) : line,
   );
+}
+
+// TESTS ===============================================================================================================
+
+if (import.meta.vitest) {
+  const { describe, it, expect, beforeEach } = import.meta.vitest;
+
+  beforeEach(async () => {
+    await TESTING.init("en");
+    _$ = TESTING.CLIENT_STRINGS;
+    _$REF = TESTING.CLIENT_STRINGS_REF;
+    ITEM_BY_TRANSLATED_LOCAL = TESTING.ITEM_BY_TRANSLATED;
+    ITEM_BY_REF_LOCAL = TESTING.ITEM_BY_REF;
+    STAT_BY_MATCH_STR_LOCAL = TESTING.STAT_BY_MATCH_STR;
+    testOverrideClientStrings(TESTING.CLIENT_STRINGS);
+    testOverrideClientStringsStat(TESTING.CLIENT_STRINGS);
+  });
+
+  // describe("parseRequirements", () => {
+  //   it("should not parse without requirements", () => {
+  //     const status = parseRequirements(
+  //       ["Level: 46", "Str: 33", "Int: 83 (unmet)"],
+  //       undefined as unknown as ParsedItem,
+  //     );
+
+  //     expect(status).toBe("SECTION_SKIPPED");
+  //   });
+
+  //   it("should parse requirements", () => {
+  //     const status = parseRequirements(
+  //       ["Requirements", "Level: 46", "Str: 33", "Int: 83 (unmet)"],
+  //       undefined as unknown as ParsedItem,
+  //     );
+
+  //     expect(status).toBe("SECTION_PARSED");
+  //   });
+
+  //   it("should parse with only requirements", () => {
+  //     const status = parseRequirements(
+  //       ["Requirements"],
+  //       undefined as unknown as ParsedItem,
+  //     );
+
+  //     expect(status).toBe("SECTION_PARSED");
+  //   });
+  // });
+
+  // General tests with full items
+  describe("parseClipboard", () => {
+    //     it("should parse Spectre", () => {
+    //       const item = parseClipboard(`Item Class: Sceptres
+    // Rarity: Magic
+    // Opalescent Omen Sceptre of Kindling
+    // --------
+    // Spirit: 100
+    // --------
+    // Requirements:
+    // Level: 46
+    // Str: 33
+    // Int: 83 (unmet)
+    // --------
+    // Item Level: 46
+    // --------
+    // +86 to maximum Mana
+    // 17% increased Mana Regeneration Rate
+    // 10% increased Light Radius`);
+    //       expect(item.isOk()).toBe(true);
+    //     });
+
+    //     it("should parse Staves", () => {
+    //       const item = parseClipboard(`Item Class: Staves
+    // Rarity: Magic
+    // Chiming Staff of the Augur
+    // --------
+    // Requirements:
+    // Level: 46
+    // Int: 106 (unmet)
+    // --------
+    // Item Level: 46
+    // --------
+    // +19 to Intelligence`);
+    //       expect(item.isOk()).toBe(true);
+    //     });
+
+    it("should parse Ring", () => {
+      const item = parseClipboard(`Item Class: Rings
+Rarity: Rare
+Morbid Whorl
+Ruby Ring
+--------
+Requirements:
+Level: 23
+--------
+Item Level: 39
+--------
++27% to Fire Resistance (implicit)
+--------
++33 to Accuracy Rating
++35 to Evasion Rating
++13% to Lightning Resistance
+38% increased Mana Regeneration Rate
+`);
+      console.log(_$);
+      console.log(item);
+      expect(item.isOk()).toBe(true);
+    });
+  });
 }

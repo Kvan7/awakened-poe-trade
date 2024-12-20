@@ -2,6 +2,7 @@
   "name": "exiled-exchange-2",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "lint": "eslint --ext .ts,.vue src",

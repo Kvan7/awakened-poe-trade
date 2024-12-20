@@ -1,4 +1,4 @@
-import { CLIENT_STRINGS as _$ } from "@/assets/data";
+import { CLIENT_STRINGS } from "@/assets/data";
 import type { ParsedStat } from "./stat-translations";
 import { ModifierType } from "./modifiers";
 import { removeLinesEnding } from "./Parser";
@@ -9,6 +9,8 @@ export const ENCHANT_LINE = " (enchant)";
 export const IMPLICIT_LINE = " (implicit)";
 const CRAFTED_LINE = " (crafted)";
 const FRACTURED_LINE = " (fractured)";
+
+let _$ = CLIENT_STRINGS;
 
 export interface ParsedModifier {
   info: ModifierInfo;
@@ -204,4 +206,8 @@ export function incrRoll(value: number, p: number, dp: number): number {
   const res = value + (value * p) / 100;
   const rounding = Math.pow(10, dp);
   return Math.trunc((res + Number.EPSILON) * rounding) / rounding;
+}
+
+export function testOverrideClientStrings(override: typeof CLIENT_STRINGS) {
+  _$ = override;
 }

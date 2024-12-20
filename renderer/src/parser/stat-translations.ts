@@ -1,6 +1,8 @@
-import { CLIENT_STRINGS as _$, STAT_BY_MATCH_STR } from "@/assets/data";
+import { CLIENT_STRINGS, STAT_BY_MATCH_STR } from "@/assets/data";
 import type { StatMatcher, Stat } from "@/assets/data";
 import type { ModifierType } from "./modifiers";
+
+let _$ = CLIENT_STRINGS;
 
 // This file is a little messy and scary,
 // but that's how stats translations are parsed :-D
@@ -252,4 +254,8 @@ export function getRollOrMinmaxAvg(values: number[]): number {
   } else {
     return values[0];
   }
+}
+
+export function testOverrideClientStrings(override: typeof CLIENT_STRINGS) {
+  _$ = override;
 }
