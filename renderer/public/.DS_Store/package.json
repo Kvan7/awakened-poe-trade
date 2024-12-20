@@ -25,7 +25,7 @@
     "start": "node dist/index.js",
     "items": "ts-node items.ts",
     "stats": "ts-node stats.ts",
-    "copy-files": "cp -R EXPORT/tables/English/* vendor/client/tables/",
+    "copy-files": "sh ./copy-tables.sh",
     "push-ndjson": "bash ./push-ndjson.sh",
     "anon-vodka-python": "python ./vendor/client/parser.py",
     "langs-anon-vodka-python": "python ./vendor/client/parserRunner.py",

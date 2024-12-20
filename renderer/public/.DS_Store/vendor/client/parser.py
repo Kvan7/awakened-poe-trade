@@ -27,7 +27,9 @@ class Parser:
         return os.path.dirname(os.path.realpath(__file__))
 
     def load_file(self, file):
-        return json.loads(open(f"{self.base_dir}/{self.lang}/{file}.json").read())
+        return json.loads(
+            open(f"{self.base_dir}/{self.lang}/{file}.json", encoding="utf-8").read()
+        )
 
     def __init__(self, lang="en"):
         self.lang = lang
@@ -47,13 +49,19 @@ class Parser:
         self.mods_file = self.load_file("Mods")
         # NOTE: could need to add local here?
         self.trade_stats = json.loads(
-            open(f"{self.cwd}/../json-api/en/stats.json").read()
+            open(
+                f"{self.cwd}/../json-api/{self.lang}/stats.json", encoding="utf-8"
+            ).read()
         )  # content of https://www.pathofexile.com/api/trade2/data/stats
         self.trade_items = json.loads(
-            open(f"{self.cwd}/../json-api/en/items.json").read()
+            open(
+                f"{self.cwd}/../json-api/{self.lang}/items.json", encoding="utf-8"
+            ).read()
         )  # content of https://www.pathofexile.com/api/trade2/data/items
         self.trade_exchange_items = json.loads(
-            open(f"{self.cwd}/../json-api/en/static.json").read()
+            open(
+                f"{self.cwd}/../json-api/{self.lang}/static.json", encoding="utf-8"
+            ).read()
         )  # content of https://www.pathofexile.com/api/trade2/data/static
 
         self.items = {}

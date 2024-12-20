@@ -144,16 +144,18 @@ vendor/client/descriptions/*
 
 vendor/client/tables/*
 !vendor/client/tables/index.ts
+
 !vendor/client/tables/ArmourTypesOverride.json
+!vendor/client/tables/en/ArmourTypesOverride.json
+!vendor/client/tables/ru/ArmourTypesOverride.json
+!vendor/client/tables/ko/ArmourTypesOverride.json
+!vendor/client/tables/cmn-Hant/ArmourTypesOverride.json
+
 !vendor/client/tables/en/.gitkeep
 !vendor/client/tables/ru/.gitkeep
 !vendor/client/tables/ko/.gitkeep
 !vendor/client/tables/cmn-Hant/.gitkeep
 
-!vendor/client/tables/en/ArmourTypesOverride.json
-!vendor/client/tables/ru/ArmourTypesOverride.json
-!vendor/client/tables/ko/ArmourTypesOverride.json
-!vendor/client/tables/cmn-Hant/ArmourTypesOverride.json
 
 
 
