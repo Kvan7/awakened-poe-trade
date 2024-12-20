@@ -32,9 +32,12 @@ class Parser:
         """Returns the directory where the script is located."""
         return os.path.dirname(os.path.realpath(__file__))
 
-    def load_file(self, file):
+    def load_file(self, file, is_en=False):
         return json.loads(
-            open(f"{self.base_dir}/{self.lang}/{file}.json", encoding="utf-8").read()
+            open(
+                f"{self.base_dir}/{self.lang if not is_en else 'en'}/{file}.json",
+                encoding="utf-8",
+            ).read()
         )
 
     def __init__(self, lang="en"):
@@ -51,8 +54,10 @@ class Parser:
         self.skill_gems = self.load_file("SkillGems")
         self.skill_gem_info = self.load_file("SkillGemInfo")
         self.stats_file = self.load_file("Stats")
+        self.en_stats_file = self.load_file("Stats", is_en=True)
         self.translation_files = os.listdir(f"{self.cwd}/descriptions")
         self.mods_file = self.load_file("Mods")
+        self.en_mods_file = self.load_file("Mods", is_en=True)
         # NOTE: could need to add local here?
         self.trade_stats = json.loads(
             open(
@@ -139,22 +144,22 @@ class Parser:
 
                 self.stats_trade_ids[text][type].append(id)
 
-    def parse_mod(self, id, english, log=False):
+    def parse_mod(self, id, lines, log=False):
         if log:
             print(
                 "===================================================================="
             )
-            print(f"[id:{id}] {english}")
+            print(f"[id:{id}] {lines}")
         matchers = []
         ref = None
 
-        for lang in english:
-            lang = self.convert_stat_name(lang)
+        for line in lines:
+            line = self.convert_stat_name(line)
 
-            if lang is None:
+            if line is None:
                 continue
 
-            matcher = lang
+            matcher = line
             # remove prefixes
             if matcher[0] == "+":
                 matcher = matcher[1:]
@@ -167,7 +172,7 @@ class Parser:
             matchers.append({"string": matcher, "negate": has_negate})
 
             if ref is None:
-                ref = lang
+                ref = line
 
         id = id.split(" ")
 
@@ -250,7 +255,7 @@ class Parser:
         print("Parsing", dir)
         stats_translations = open(dir, encoding="utf-16").read().split("\n")
         should_log = True
-        for i in range(0, 100):
+        for i in range(0, len(stats_translations)):
             line = stats_translations[i]
 
             if line == "description":
@@ -359,7 +364,7 @@ class Parser:
         dir = f"{self.cwd}/descriptions/{file}"
         print("Parsing", dir)
         stats_translations = open(dir, encoding="utf-16").read().split("\n")
-        for i in range(0, 100):
+        for i in range(0, len(stats_translations)):
             line = stats_translations[i]
 
             if line == "description":
@@ -367,7 +372,7 @@ class Parser:
                 id = (
                     stats_translations[i + 1].strip()[2:].replace('"', "")
                 )  # skip first 2 characters
-                self.parse_translation_line(stats_translations, i, id)
+                self.en_parse_translation_line(stats_translations, i, id)
 
     def en_parse_mods(self):
         for stat in self.en_stats_file:
@@ -376,7 +381,7 @@ class Parser:
             self.en_stats[id] = name
 
         # translations
-        for file in self.en_translation_files:
+        for file in self.translation_files:
             if os.path.isdir(f"{self.cwd}/descriptions/{file}"):
                 # traverse directories if it doesnt start with _
                 if not file.startswith("_"):
@@ -674,6 +679,7 @@ class Parser:
 
     def run(self):
         self.parse_trade_ids()
+        self.en_parse_mods()
         self.parse_mods()
         self.parse_categories()
         self.parse_items()
