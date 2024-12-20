@@ -20,6 +20,12 @@ import urllib.parse
 
 import requests
 
+LANG_CODES_TO_NAMES = {
+    "ru": "Russian",
+    "ko": "Korean",
+    "cmn-Hant": "Traditional Chinese",
+}
+
 
 class Parser:
     def get_script_dir(self):
@@ -123,9 +129,15 @@ class Parser:
 
                 self.stats_trade_ids[text][type].append(id)
 
-    def parse_mod(self, id, english):
+    def parse_mod(self, id, english, log=False):
+        if log:
+            print(
+                "===================================================================="
+            )
+            print(f"[id:{id}] {english}")
         matchers = []
         ref = None
+
         for lang in english:
             lang = self.convert_stat_name(lang)
 
@@ -159,11 +171,38 @@ class Parser:
                 "matchers": matchers,
             }
 
+    def parse_translation_line(self, stats_translations, i, id, log=False):
+        if log:
+            print(
+                "===================================================================="
+            )
+            print(f"[i:{i}, id:{id}] {stats_translations[i]}")
+            print(f"[i:{i+1}, id:{id}] {stats_translations[i+1]}")
+            print(f"[i:{i+2}, id:{id}] {stats_translations[i+2]}")
+            print(f"[i:{i+3}, id:{id}] {stats_translations[i+3]}")
+        line = stats_translations[i + 3].strip()  # skip first 2 characters
+        start = line.find('"')
+        end = line.rfind('"')
+        line = line[start + 1 : end]
+
+        # convert to array so we can add the negated option later on, if one exists
+        line = [line]
+
+        negate_line = stats_translations[i + 4].strip()
+        if "lang" not in negate_line and "negate" in negate_line:
+            # mod has a negated version
+            end = negate_line.find("negate")
+            negate_line = negate_line[negate_line.find('"') + 1 : end + len("negate")]
+            line.append(negate_line)
+
+        self.parse_mod(id, line, log=log)
+
     def parse_translation_file(self, file):
         dir = f"{self.cwd}/descriptions/{file}"
         print("Parsing", dir)
         stats_translations = open(dir, encoding="utf-16").read().split("\n")
-        for i in range(0, len(stats_translations)):
+        should_log = True
+        for i in range(0, 100):
             line = stats_translations[i]
 
             if line == "description":
@@ -171,24 +210,29 @@ class Parser:
                 id = (
                     stats_translations[i + 1].strip()[2:].replace('"', "")
                 )  # skip first 2 characters
-                english = stats_translations[i + 3].strip()  # skip first 2 characters
-                start = english.find('"')
-                end = english.rfind('"')
-                english = english[start + 1 : end]
-
-                # convert to array so we can add the negated option later on, if one exists
-                english = [english]
-
-                negate_english = stats_translations[i + 4].strip()
-                if "lang" not in negate_english and "negate" in negate_english:
-                    # mod has a negated version
-                    end = negate_english.find("negate")
-                    negate_english = negate_english[
-                        negate_english.find('"') + 1 : end + len("negate")
-                    ]
-                    english.append(negate_english)
-
-                self.parse_mod(id, english)
+                if self.lang == "en":
+                    self.parse_translation_line(
+                        stats_translations, i, id, log=should_log
+                    )
+                    should_log = False
+                else:
+                    j = i
+                    while (
+                        j + 5 < 100
+                        and stats_translations[j + 1] != "description"
+                        and LANG_CODES_TO_NAMES[self.lang]
+                        not in stats_translations[j + 1]
+                    ):
+                        j += 1
+                    if should_log:
+                        print(
+                            f"Parsing [j:{j + 1}, id:{id}] {stats_translations[j + 1]}"
+                        )
+                    if stats_translations[j + 1] != "description":
+                        self.parse_translation_line(
+                            stats_translations, j, id, log=should_log
+                        )
+                        should_log = False
 
     def parse_mods(self):
         for stat in self.stats_file:
@@ -214,6 +258,7 @@ class Parser:
                 translation = self.mod_translations.get(stats_id)
                 if translation:
                     ref = translation.get("ref")
+                    print(translation)
                     matchers = translation.get("matchers")
                     ids = self.stats_trade_ids.get(matchers[0].get("string"))
                     # if ref.lower() == "bow attacks fire an additional arrow":
@@ -448,37 +493,41 @@ class Parser:
             if gem:
                 out.update({"gem": gem})
 
-            f.write(json.dumps(out) + "\n")
+            f.write(json.dumps(out, ensure_ascii=False) + "\n")
 
         for item in self.unique_items:
-            f.write(json.dumps(item) + "\n")
+            f.write(json.dumps(item, ensure_ascii=False) + "\n")
 
         f.close()
 
         # somehow not a thing? - possibly missing some data
-        self.mods["physical_local_damage_+%"] = {
-            "ref": "#% increased Physical Damage",
-            "better": 1,
-            "id": "physical_local_damage_+%",
-            "matchers": [{"string": "#% increased Physical Damage"}],
-            "trade": {
-                "ids": {
-                    "explicit": ["explicit.stat_419810844"],
-                    "fractured": ["fractured.stat_419810844"],
-                    "rune": ["rune.stat_419810844"],
-                }
-            },
-        }
+        # self.mods["physical_local_damage_+%"] = {
+        #     "ref": "#% increased Physical Damage",
+        #     "better": 1,
+        #     "id": "physical_local_damage_+%",
+        #     "matchers": [{"string": "#% increased Physical Damage"}],
+        #     "trade": {
+        #         "ids": {
+        #             "explicit": ["explicit.stat_419810844"],
+        #             "fractured": ["fractured.stat_419810844"],
+        #             "rune": ["rune.stat_419810844"],
+        #         }
+        #     },
+        # }
 
         seen = set()
-        m = open(f"{self.out_dir}/stats.ndjson", "w", encoding="utf-8")
+        m = open(
+            f"{self.out_dir}/stats.ndjson",
+            "w",
+            encoding="utf-8",
+        )
         for mod in self.mods.values():
             id = mod.get("id")
 
             if id in seen:
                 continue
 
-            m.write(json.dumps(mod) + "\n")
+            m.write(json.dumps(mod, ensure_ascii=False) + "\n")
             seen.add(id)
         m.close()
 
@@ -487,19 +536,32 @@ class Parser:
             "w",
             encoding="utf-8",
         ) as f:
-            f.write(json.dumps(self.items, indent=4))
+            f.write(json.dumps(self.items, indent=4, ensure_ascii=False))
 
         with open(
             f"{self.get_script_dir()}/pyDumps/{self.lang+'-out'}/mods_dump.json",
             "w",
             encoding="utf-8",
         ) as f:
-            f.write(json.dumps(self.mods, indent=4))
+            f.write(json.dumps(self.mods, indent=4, ensure_ascii=False))
 
-    with open(
-        f"{get_script_dir()}/pyDumps/matchers_no_trade_ids.json", "w", encoding="utf-8"
-    ) as f:
-        f.write(json.dumps(matchers_no_trade_ids, indent=4))
+        with open(
+            f"{self.get_script_dir()}/pyDumps/{self.lang+'-out'}/matchers_no_trade_ids.json",
+            "w",
+            encoding="utf-8",
+        ) as f:
+            f.write(
+                json.dumps(self.matchers_no_trade_ids, indent=4, ensure_ascii=False)
+            )
+
+    def run(self):
+        self.parse_trade_ids()
+        self.parse_mods()
+        self.parse_categories()
+        self.parse_items()
+        self.resolve_item_classes()
+        self.parse_trade_exchange_items()
+        self.write_to_file()
 
 
 if __name__ == "__main__":
