@@ -504,6 +504,11 @@ class Parser:
         self.parse_trade_exchange_items()
         self.write_to_file()
 
+    with open(
+        f"{get_script_dir()}/pyDumps/matchers_no_trade_ids.json", "w", encoding="utf-8"
+    ) as f:
+        f.write(json.dumps(matchers_no_trade_ids, indent=4))
+
 
 if __name__ == "__main__":
     Parser().run()
