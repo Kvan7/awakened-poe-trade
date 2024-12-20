@@ -488,22 +488,6 @@ class Parser:
         ) as f:
             f.write(json.dumps(self.mods, indent=4))
 
-        with open(
-            f"{self.get_script_dir()}/pyDumps/{self.lang+'-out'}/matchers_no_trade_ids.json",
-            "w",
-            encoding="utf-8",
-        ) as f:
-            f.write(json.dumps(self.matchers_no_trade_ids, indent=4))
-
-    def run(self):
-        self.parse_trade_ids()
-        self.parse_mods()
-        self.parse_categories()
-        self.parse_items()
-        self.resolve_item_classes()
-        self.parse_trade_exchange_items()
-        self.write_to_file()
-
     with open(
         f"{get_script_dir()}/pyDumps/matchers_no_trade_ids.json", "w", encoding="utf-8"
     ) as f:

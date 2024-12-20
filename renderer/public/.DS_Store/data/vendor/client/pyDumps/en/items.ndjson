@@ -3025,7 +3025,6 @@
 {"name": "INCOMPLETE", "refName": "INCOMPLETE", "namespace": "UNIQUE", "unique": {"base": "War Spear"}}
 {"name": "INCOMPLETE", "refName": "INCOMPLETE", "namespace": "UNIQUE", "unique": {"base": "Vampiric Blade"}}
 {"name": "INCOMPLETE", "refName": "INCOMPLETE", "namespace": "UNIQUE", "unique": {"base": "Charred Shortsword"}}
-{"name": "INCOMPLETE", "refName": "INCOMPLETE", "namespace": "UNIQUE", "unique": {"base": "Corroded Longsword"}}
 {"name": "INCOMPLETE", "refName": "INCOMPLETE", "namespace": "UNIQUE", "unique": {"base": "Rippled Greatsword"}}
 {"name": "Lifesprig", "refName": "Lifesprig", "namespace": "UNIQUE", "unique": {"base": "Attuned Wand"}}
 {"name": "Matsya", "refName": "Matsya", "namespace": "UNIQUE", "unique": {"base": "Crescent Quarterstaff"}}
